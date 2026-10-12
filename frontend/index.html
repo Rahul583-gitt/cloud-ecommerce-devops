@@ -1,0 +1,65 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CloudCart | E-Commerce</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>CloudCart</h1>
+    <p>Cloud-native shopping, made simple.</p>
+  </header>
+
+  <main>
+    <h2>Our Products</h2>
+    <p id="status">Loading products...</p>
+    <section id="products" class="products"></section>
+  </main>
+
+  <footer>
+    <p>CloudCart | AWS · Docker · Kubernetes</p>
+  </footer>
+
+  <script>
+    const API_URL = "http://localhost:3000";
+
+    async function loadProducts() {
+      const status = document.getElementById("status");
+      const container = document.getElementById("products");
+
+      try {
+        const response = await fetch(`${API_URL}/products`);
+        if (!response.ok) throw new Error("Unable to load products");
+
+        const products = await response.json();
+        container.replaceChildren();
+
+        products.forEach(product => {
+          const card = document.createElement("article");
+          card.className = "product-card";
+
+          const name = document.createElement("h3");
+          name.textContent = product.name;
+
+          const price = document.createElement("p");
+          price.textContent = `₹${Number(product.price).toLocaleString("en-IN")}`;
+
+          card.append(name, price);
+          container.appendChild(card);
+        });
+
+        status.textContent = `${products.length} products available`;
+      } catch (error) {
+        status.textContent =
+          "Unable to load products. Check that the backend is running.";
+        console.error(error);
+      }
+    }
+
+    loadProducts();
+  </script>
+</body>
+</html>
