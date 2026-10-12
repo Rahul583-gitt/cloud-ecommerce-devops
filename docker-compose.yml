@@ -1,0 +1,10 @@
+
+services:
+  backend:
+    build:
+      context: ./backend
+    image: cloud-ecommerce-api:1.0
+    container_name: ecommerce-api
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
